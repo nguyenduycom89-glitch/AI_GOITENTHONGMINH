@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trò Chơi Tương Tác AI & Ôn Tập Trắc Nghiệm</title>
+    <title>Trò Chơi Tương Tác AI - Lớp Học</title>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
@@ -20,9 +20,6 @@
         .controls { display: flex; gap: 15px; align-items: center;}
         .btn-icon { background: white; border: none; border-radius: 50%; width: 55px; height: 55px; font-size: 24px; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.2); transition: 0.2s; display: flex; justify-content: center; align-items: center; }
         .btn-icon:hover { transform: scale(1.1); background: #f0f0f0; }
-        
-        .btn-feature { background: #FF6347; color: white; border: none; padding: 12px 25px; border-radius: 30px; font-size: 18px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.3); transition: 0.2s; display: flex; align-items: center; gap: 8px;}
-        .btn-feature:hover { transform: scale(1.05); background: #FF4500; }
 
         .status-badge { background-color: #4682B4; color: #FFD700; padding: 12px 35px; border-radius: 30px; font-size: 22px; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.2); transition: 0.3s; }
         
@@ -41,24 +38,16 @@
         #webcam, #output_canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
         .ai-status { position: absolute; bottom: 5px; right: 10px; color: #00FF00; font-size: 14px; font-weight: bold; text-shadow: 2px 2px 4px black; z-index: 1001;}
 
-        /* Modal Dùng chung (Cài đặt, Câu hỏi) */
+        /* Modal Cài đặt */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.8); z-index: 2000; justify-content: center; align-items: center; backdrop-filter: blur(5px);}
-        .modal-content { background: white; padding: 30px; border-radius: 20px; width: 750px; max-width: 95%; max-height: 95vh; overflow-y: auto; box-shadow: 0 15px 30px rgba(0,0,0,0.5); position: relative;}
+        .modal-content { background: white; padding: 30px; border-radius: 20px; width: 500px; max-width: 95%; max-height: 95vh; overflow-y: auto; box-shadow: 0 15px 30px rgba(0,0,0,0.5); position: relative;}
         .modal h2 { margin-bottom: 15px; color: #333; border-bottom: 2px solid #eee; padding-bottom: 10px; text-align: center; font-size: 24px;}
-        
-        /* Giao diện Câu Hỏi Trắc Nghiệm */
-        #question-display { font-size: 22px; font-weight: bold; color: #1E90FF; margin-bottom: 25px; text-align: center; line-height: 1.5;}
-        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
-        .option-btn { background: #fff; border: 2px solid #ced4da; padding: 15px; border-radius: 12px; font-size: 18px; font-weight: bold; cursor: pointer; transition: 0.2s; text-align: left; color: #495057; box-shadow: 0 2px 4px rgba(0,0,0,0.05);}
-        .option-btn:hover { background: #f8f9fa; border-color: #adb5bd; transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
-        .option-btn.correct { background: #d4edda; border-color: #28a745; color: #155724; box-shadow: 0 0 15px rgba(40, 167, 69, 0.5);}
-        .option-btn.wrong { background: #f8d7da; border-color: #dc3545; color: #721c24; box-shadow: 0 0 15px rgba(220, 53, 69, 0.5);}
         
         /* Form Cài đặt */
         .form-group { margin-bottom: 15px; }
         .form-group label { display: block; margin-bottom: 6px; font-weight: bold; color: #444; font-size: 15px;}
-        .form-group textarea { width: 100%; height: 160px; padding: 12px; border-radius: 8px; border: 1px solid #ccc; font-family: monospace; font-size: 14px; resize: vertical;}
-        .file-upload-wrapper { background: #f0f8ff; padding: 10px 15px; border-radius: 8px; border: 1px dashed #4682B4; display: flex; flex-direction: column; gap: 5px; margin-bottom: 10px;}
+        .form-group textarea { width: 100%; height: 250px; padding: 12px; border-radius: 8px; border: 1px solid #ccc; font-family: monospace; font-size: 14px; resize: vertical;}
+        .file-upload-wrapper { background: #f0f8ff; padding: 10px 15px; border-radius: 8px; border: 1px dashed #4682B4; display: flex; flex-direction: column; gap: 5px; margin-bottom: 20px;}
         .file-upload-wrapper input { font-size: 13px; }
         
         .btn-save { background: #4CAF50; color: white; border: none; padding: 12px 25px; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: bold; float: right; margin-left: 10px;}
@@ -101,17 +90,14 @@
 
     <!-- THẺ AUDIO -->
     <audio id="bgMusic" loop preload="auto"><source src="nhacnen.mp3" type="audio/mpeg"></audio>
-    <audio id="correctSound" preload="auto"></audio>
-    <audio id="wrongSound" preload="auto"></audio>
 
     <div class="sun" onclick="triggerSelection(1)" title="Bấm vào đây để gọi ngẫu nhiên 1 em"></div>
     
     <div class="header">
         <div class="controls">
-            <button class="btn-icon" onclick="openSettings()" title="Cài đặt (Học sinh, Câu hỏi, Nhạc)">⚙️</button>
+            <button class="btn-icon" onclick="openSettings()" title="Cài đặt (Học sinh, Nhạc)">⚙️</button>
             <button class="btn-icon" onclick="resetStudents()" title="Làm mới lại toàn bộ danh sách lớp">🔄</button>
             <button class="btn-icon" id="musicBtn" onclick="toggleMusic()" title="Bật/Tắt nhạc nền">🔇</button>
-            <button class="btn-feature" style="background: #20b2aa;" onclick="showRandomQuestion()">📝 Ôn Tập Trắc Nghiệm</button>
         </div>
         <div class="status-badge" id="statusText">Giơ ngón tay vào Camera để chọn học sinh!</div>
         <div style="flex: 1;"></div>
@@ -136,60 +122,20 @@
             <span class="close-x" onclick="closeModal('settingsModal')">✖</span>
             <h2>Cài đặt Trò chơi & Dữ liệu</h2>
             
-            <div style="display: flex; gap: 20px;">
-                <!-- Cột trái: Học sinh & Âm thanh -->
-                <div style="flex: 1;">
-                    <div style="border: 1px solid #ddd; border-radius: 8px; padding: 10px; margin-bottom: 15px; background: #fafafa;">
-                        <h3 style="font-size: 15px; margin-bottom: 10px; color: #555;">🎵 Cài đặt Âm thanh</h3>
-                        <div class="file-upload-wrapper">
-                            <label>Nhạc nền (Chạy xuyên suốt):</label>
-                            <input type="file" id="musicUpload" accept="audio/*">
-                        </div>
-                        <div class="file-upload-wrapper">
-                            <label>✔️ Âm thanh báo ĐÚNG:</label>
-                            <input type="file" id="correctUpload" accept="audio/*">
-                        </div>
-                        <div class="file-upload-wrapper">
-                            <label>❌ Âm thanh báo SAI:</label>
-                            <input type="file" id="wrongUpload" accept="audio/*">
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>📋 Danh sách Học sinh (Tên | TênFileẢnh):</label>
-                        <p style="font-size: 12px; color: #666; margin-bottom: 5px;">- Chỉ gõ tên: AI tự vẽ ảnh.<br>- Gõ Tên|TênFileẢnh: Dùng ảnh thật.</p>
-                        <textarea id="studentsDataText" placeholder="Tùng Chi|Chi.png.png&#10;Bảo Ngọc|Bngoc.png.png"></textarea>
-                    </div>
-                </div>
-
-                <!-- Cột phải: Ngân hàng câu hỏi -->
-                <div style="flex: 1;">
-                    <div class="form-group">
-                        <label>📚 Ngân hàng Câu hỏi Trắc nghiệm:</label>
-                        <p style="font-size: 12px; color: #d32f2f; margin-bottom: 5px;">*Copy dán theo đúng cấu trúc mẫu bên dưới (Viết hoa A,B,C,D và Đáp án).</p>
-                        <textarea id="questionsDataText" style="height: 480px; background: #fffdf2;"></textarea>
-                    </div>
-                </div>
+            <div class="file-upload-wrapper">
+                <label>🎵 Chọn nhạc nền (Chạy xuyên suốt):</label>
+                <input type="file" id="musicUpload" accept="audio/*">
+            </div>
+            
+            <div class="form-group">
+                <label>📋 Danh sách Học sinh (Tên | TênFileẢnh):</label>
+                <p style="font-size: 12px; color: #666; margin-bottom: 5px;">- Chỉ gõ tên: AI tự vẽ ảnh.<br>- Gõ Tên|TênFileẢnh: Dùng ảnh thật.</p>
+                <textarea id="studentsDataText" placeholder="Tùng Chi|Chi.png.png&#10;Bảo Ngọc|Bngoc.png.png"></textarea>
             </div>
 
-            <div style="margin-top: 10px;">
+            <div style="margin-top: 20px; overflow: hidden;">
                 <button class="btn-save" onclick="saveSettings()">💾 Lưu & Áp Dụng</button>
                 <button class="btn-close" onclick="closeModal('settingsModal')">Hủy</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL CÂU HỎI TRẮC NGHIỆM -->
-    <div class="modal" id="questionModal">
-        <div class="modal-content" style="width: 800px; padding: 40px;">
-            <span class="close-x" onclick="closeModal('questionModal')">✖</span>
-            <h2 style="color: #4682B4; font-size: 28px; margin-bottom: 25px;">Phần Thi Trắc Nghiệm</h2>
-            <div id="question-display">Đang tải câu hỏi...</div>
-            <div class="options-grid" id="options-container">
-                <!-- Nút đáp án tự sinh ra -->
-            </div>
-            <div style="text-align: center; margin-top: 30px;">
-                <button class="btn-feature" style="display: inline-flex; margin: 0 auto; background: #20b2aa; padding: 15px 30px; font-size: 20px;" onclick="showRandomQuestion()">Chuyển Câu Khác ⏭</button>
             </div>
         </div>
     </div>
@@ -199,21 +145,13 @@
         function openSettings() { document.getElementById('settingsModal').style.display = 'flex'; }
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
-        // --- QUẢN LÝ ÂM THANH (NHẠC NỀN & HIỆU ỨNG) ---
+        // --- QUẢN LÝ ÂM THANH (NHẠC NỀN) ---
         const bgMusic = document.getElementById('bgMusic');
-        const correctSound = document.getElementById('correctSound');
-        const wrongSound = document.getElementById('wrongSound');
         const musicBtn = document.getElementById('musicBtn');
         let isMusicPlaying = false;
 
         document.getElementById('musicUpload').addEventListener('change', function(event) {
             if (event.target.files[0]) bgMusic.src = URL.createObjectURL(event.target.files[0]);
-        });
-        document.getElementById('correctUpload').addEventListener('change', function(event) {
-            if (event.target.files[0]) correctSound.src = URL.createObjectURL(event.target.files[0]);
-        });
-        document.getElementById('wrongUpload').addEventListener('change', function(event) {
-            if (event.target.files[0]) wrongSound.src = URL.createObjectURL(event.target.files[0]);
         });
 
         function toggleMusic() {
@@ -223,92 +161,6 @@
                 .catch(() => { alert("Chưa có nhạc nền! Hãy vào Cài đặt (⚙️) tải nhạc nền lên nhé."); isMusicPlaying = false; });
             }
             isMusicPlaying = !isMusicPlaying;
-        }
-
-        // --- HỆ THỐNG CÂU HỎI TRẮC NGHIỆM ---
-        const defaultQuestions = `Câu 1: Số gồm 5 trăm nghìn, 3 chục nghìn, 2 đơn vị viết là gì? (Toán 4)
-A. 503 002
-B. 530 002
-C. 53 002
-D. 500 302
-Đáp án: B
-
-Câu 2: Từ nào sau đây là từ láy? (Tiếng Việt 4)
-A. Sách vở
-B. Xe đạp
-C. Mát mẻ
-D. Hoa hồng
-Đáp án: C
-
-Câu 3: Quá trình thực vật tự tạo ra chất dinh dưỡng gọi là gì? (Khoa học 4)
-A. Hô hấp
-B. Thoát hơi nước
-C. Bài tiết
-D. Quang hợp
-Đáp án: D`;
-
-        let questionBank = [];
-        let currentCorrectAnswer = "";
-
-        function parseQuestions(text) {
-            let parsedList = [];
-            let blocks = text.split(/\n\s*\n/); 
-            blocks.forEach(block => {
-                let lines = block.split('\n').filter(l => l.trim() !== '');
-                if(lines.length >= 6) {
-                    let q = lines[0]; 
-                    let opts = [lines[1], lines[2], lines[3], lines[4]]; 
-                    let ansLine = lines[5].toUpperCase();
-                    let ans = "A";
-                    if(ansLine.includes("B")) ans = "B";
-                    if(ansLine.includes("C")) ans = "C";
-                    if(ansLine.includes("D")) ans = "D";
-                    parsedList.push({ question: q, options: opts, answer: ans });
-                }
-            });
-            return parsedList;
-        }
-
-        function showRandomQuestion() {
-            if(questionBank.length === 0) {
-                alert("Ngân hàng câu hỏi trống! Vui lòng vào Cài đặt để thêm câu hỏi.");
-                return;
-            }
-            let randomIndex = Math.floor(Math.random() * questionBank.length);
-            let qData = questionBank[randomIndex];
-            currentCorrectAnswer = qData.answer;
-
-            document.getElementById('question-display').innerText = qData.question;
-            let optionsHtml = '';
-            
-            const labels = ['A', 'B', 'C', 'D'];
-            qData.options.forEach((optText, index) => {
-                let label = labels[index];
-                optionsHtml += `<button class="option-btn" onclick="checkAnswer(this, '${label}')"><b>${label}.</b> ${optText.replace(/^[A-D]\.\s*/, '')}</button>`;
-            });
-
-            document.getElementById('options-container').innerHTML = optionsHtml;
-            document.getElementById('questionModal').style.display = 'flex';
-        }
-
-        function checkAnswer(btnElement, selectedOption) {
-            let allBtns = document.querySelectorAll('.option-btn');
-            allBtns.forEach(btn => btn.disabled = true);
-
-            if(selectedOption === currentCorrectAnswer) {
-                btnElement.classList.add('correct');
-                correctSound.currentTime = 0; 
-                correctSound.play().catch(e => console.log("Chưa tải âm thanh đúng"));
-            } else {
-                btnElement.classList.add('wrong');
-                wrongSound.currentTime = 0;
-                wrongSound.play().catch(e => console.log("Chưa tải âm thanh sai"));
-                
-                let correctIndex = ['A', 'B', 'C', 'D'].indexOf(currentCorrectAnswer);
-                if(correctIndex >= 0 && correctIndex < allBtns.length) {
-                    allBtns[correctIndex].classList.add('correct');
-                }
-            }
         }
 
         // --- DỮ LIỆU HỌC SINH VÀ CÀI ĐẶT ---
@@ -325,19 +177,11 @@ D. Quang hợp
                 return { name: cleanName, img: imgUrl };
             });
             document.getElementById('studentsDataText').value = rawData;
-
-            const savedQuestions = localStorage.getItem('questionBankData');
-            const rawQuestions = savedQuestions ? savedQuestions : defaultQuestions;
-            document.getElementById('questionsDataText').value = rawQuestions;
-            questionBank = parseQuestions(rawQuestions);
-
             initGameArea();
         }
 
         function saveSettings() {
             localStorage.setItem('classDataNamesOnly', document.getElementById('studentsDataText').value);
-            localStorage.setItem('questionBankData', document.getElementById('questionsDataText').value);
-            
             closeModal('settingsModal');
             loadSettings(); 
         }
@@ -485,15 +329,13 @@ D. Quang hợp
 
         // --- LOGIC GỌI TÊN & LOẠI DẦN HỌC SINH ---
         function triggerSelection(count) {
-            if (isSelecting) return; // Khóa lệnh nếu đang hiển thị học sinh, tránh bấm đúp
+            if (isSelecting) return;
             if (studentNodes.length === 0) {
                 alert("Đã gọi hết danh sách lớp! Vui lòng bấm nút 🔄 (Làm mới) ở góc trái để chơi lại từ đầu.");
                 return;
             }
 
-            // Đảm bảo không gọi số lượng lớn hơn số học sinh còn lại trên màn hình
             count = Math.min(count, studentNodes.length);
-
             isSelecting = true; 
             statusText.innerText = `Đã chọn ${count} học sinh lên trả lời!`;
             statusText.style.backgroundColor = "#FF4500";
